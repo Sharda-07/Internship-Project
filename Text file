@@ -1,7 +1,8 @@
 EC2 machine 
-sudo apt install 
-sudo apt install openjdk-11-jre 
-curl -fsSL https://pkg.jenkins.io/debian/jenkins.io.key | sudo tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null 
+sudo apt update
+sudo apt install fontconfig openjdk-17-jre 
+java --version
+sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \ https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
 echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null 
 sudo apt-get update 
 sudo apt-get install jenkins 
@@ -13,6 +14,20 @@ Now enter <public IP add of EC2 machine:8080> in browser
 Now install jenkins
 Add a new item and enter the item name (Pipeline project)
 select project as free style project
+in configue add execute shell:
+rm -r /var/www/html/*
+cp -r * /var/www/html/
+cd /var/www/html
+systemctl status apache2
+systemctl start apache2
+sudo systemctl enable apache2
+systemctl restart apache2
+ufw allow 'Apache'
+cd /var/www/html
+root@ip-172-31-7-68:/var/lib/jenkins/workspace/jenkins-cicd# ls
+1.jpg  README.md  index.html  style.css
+usermod -aG www-data jenkins
+chown jenkins:www-data html
 Now open webhook from the setting of the required repository
 Add webhook, and paste the jenkins URL in payload URL
 Ex:- http://13.233.252.104:8080/github-webhook/
